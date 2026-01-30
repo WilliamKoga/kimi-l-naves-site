@@ -23,7 +23,7 @@ const products = {
             'Acesso ao grupo exclusivo de alunos',
             'Bônus: Curso Online de Auto-Hipnose'
         ],
-        active: false, // Lote 1 Sold Out
+        active: true, // Lote 1 Active again
         priceId: 'price_Lote1ID'
     },
     'lote-2': {
@@ -36,7 +36,7 @@ const products = {
             'Certificado internacional',
             'Acesso ao grupo exclusivo de alunos'
         ],
-        active: true, // Lote 2 Active
+        active: false, // Lote 2 Inactive/Upcoming
         priceId: 'price_Lote2ID'
     }
 };
