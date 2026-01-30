@@ -1,28 +1,15 @@
-import Hero from './sections/Hero';
-import EventInfo from './sections/EventInfo';
-import AboutFormation from './sections/AboutFormation';
-import Instructor from './sections/Instructor';
-import Content from './sections/Content';
-import HowItWorks from './sections/HowItWorks';
-import Pricing from './sections/Pricing';
-import FAQ from './sections/FAQ';
-import FinalCTA from './sections/FinalCTA';
-import Footer from './sections/Footer';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import LandingPage from './pages/LandingPage';
+import CheckoutPage from './pages/CheckoutPage';
 
 function App() {
   return (
-    <div className="min-h-screen bg-indigo-deep">
-      <Hero />
-      <EventInfo />
-      <AboutFormation />
-      <Instructor />
-      <Content />
-      <HowItWorks />
-      <Pricing />
-      <FAQ />
-      <FinalCTA />
-      <Footer />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/checkout/:productId" element={<CheckoutPage />} />
+      </Routes>
+    </Router>
   );
 }
 

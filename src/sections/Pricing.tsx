@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Check, Star, Zap, Ticket, AlertCircle, Lock, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -26,7 +27,7 @@ const lotes = [
       'Kit do participante',
     ],
     cta: 'GARANTIR COM DESCONTO',
-    link: 'https://pay.hotmart.com/lote1',
+    link: '/checkout/lote-1',
   },
   {
     id: 2,
@@ -49,7 +50,7 @@ const lotes = [
       'Kit do participante',
     ],
     cta: 'INDISPONÍVEL',
-    link: null,
+    link: '/checkout/lote-2',
   },
 ];
 
@@ -64,6 +65,7 @@ const formatCurrency = (value: number) => {
 const Pricing = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const navigate = useNavigate();
 
   return (
     <section id="ingressos" className="py-24 relative">
@@ -89,7 +91,7 @@ const Pricing = () => {
             Escolha seu lote
           </h2>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Virada de lote automática por quantidade. 
+            Virada de lote automática por quantidade.
             Não haverá descontos posteriores.
           </p>
         </motion.div>
@@ -115,11 +117,10 @@ const Pricing = () => {
               )}
 
               <div
-                className={`h-full rounded-3xl overflow-hidden ${
-                  lote.destaque
+                className={`h-full rounded-3xl overflow-hidden ${lote.destaque
                     ? 'border-2 border-gold shadow-gold-lg'
                     : 'border border-gray-500/30 opacity-70'
-                }`}
+                  }`}
               >
                 {/* Card Header */}
                 <div className={`p-8 ${lote.destaque ? 'bg-gold/10' : 'glass'}`}>
@@ -208,7 +209,7 @@ const Pricing = () => {
                   {lote.disponivel && lote.link ? (
                     <Button
                       className="w-full mt-8 py-6 text-lg font-bold rounded-xl transition-all duration-300 bg-gradient-gold text-indigo-deep hover:shadow-gold-lg hover:scale-[1.02]"
-                      onClick={() => window.open(lote.link!, '_blank')}
+                      onClick={() => navigate(lote.link!)}
                     >
                       {lote.cta}
                     </Button>
@@ -241,8 +242,8 @@ const Pricing = () => {
                 Importante
               </h4>
               <p className="text-gray-400 text-sm">
-                O ingresso é individual e intransferível. A virada de lote é automática 
-                assim que os ingressos do lote anterior esgotarem. Recomendamos garantir 
+                O ingresso é individual e intransferível. A virada de lote é automática
+                assim que os ingressos do lote anterior esgotarem. Recomendamos garantir
                 sua vaga no Lote 1 para garantir o melhor preço.
               </p>
             </div>
@@ -257,7 +258,7 @@ const Pricing = () => {
           className="mt-8 text-center"
         >
           <p className="text-gray-400 text-sm">
-            Pagamento online seguro • Confirmação automática de inscrição • 
+            Pagamento online seguro • Confirmação automática de inscrição •
             Valor com imposto já calculado no checkout
           </p>
         </motion.div>
