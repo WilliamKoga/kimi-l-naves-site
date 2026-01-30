@@ -8,18 +8,30 @@ import { Lock } from 'lucide-react';
 interface StripePaymentFormProps {
     quantity: number;
     setQuantity: (q: number) => void;
+    name: string;
+    setName: (s: string) => void;
+    email: string;
+    setEmail: (s: string) => void;
+    phone: string;
+    setPhone: (s: string) => void;
 }
 
-const StripePaymentForm = ({ quantity, setQuantity }: StripePaymentFormProps) => {
+const StripePaymentForm = ({
+    quantity,
+    setQuantity,
+    name,
+    setName,
+    email,
+    setEmail,
+    phone,
+    setPhone
+}: StripePaymentFormProps) => {
     const stripe = useStripe();
     const elements = useElements();
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [isProcessing, setIsProcessing] = useState(false);
 
-    // Form state for required fields
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
+    // Local state removed - using props
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -68,6 +80,29 @@ const StripePaymentForm = ({ quantity, setQuantity }: StripePaymentFormProps) =>
     return (
         <form onSubmit={handleSubmit} className="bg-white/5 backdrop-blur-md border border-white/10 p-6 rounded-2xl shadow-xl space-y-6">
             <div className="space-y-4">
+                {/* Quantity - MOVED TO TOP */}
+                <div className="space-y-2">
+                    <Label className="text-off-white">Quantidade de Ingressos</Label>
+                    <div className="flex items-center gap-4 bg-white/10 border border-white/20 rounded-md p-2 w-fit">
+                        <button
+                            type="button"
+                            onClick={() => handleQuantityChange(-1)}
+                            className="w-8 h-8 flex items-center justify-center rounded bg-white/10 text-white hover:bg-white/20 transition-colors"
+                            disabled={quantity <= 1}
+                        >
+                            -
+                        </button>
+                        <span className="text-xl font-bold text-gold w-8 text-center">{quantity}</span>
+                        <button
+                            type="button"
+                            onClick={() => handleQuantityChange(1)}
+                            className="w-8 h-8 flex items-center justify-center rounded bg-white/10 text-white hover:bg-white/20 transition-colors"
+                        >
+                            +
+                        </button>
+                    </div>
+                </div>
+
                 <div className="space-y-2">
                     <Label htmlFor="name" className="text-off-white">Nome Completo (Obrigatório)</Label>
                     <Input
@@ -105,28 +140,6 @@ const StripePaymentForm = ({ quantity, setQuantity }: StripePaymentFormProps) =>
                         required
                         className="bg-white/10 border-white/20 text-off-white placeholder:text-white/30"
                     />
-                </div>
-
-                <div className="space-y-2">
-                    <Label className="text-off-white">Quantidade de Ingressos</Label>
-                    <div className="flex items-center gap-4 bg-white/10 border border-white/20 rounded-md p-2 w-fit">
-                        <button
-                            type="button"
-                            onClick={() => handleQuantityChange(-1)}
-                            className="w-8 h-8 flex items-center justify-center rounded bg-white/10 text-white hover:bg-white/20 transition-colors"
-                            disabled={quantity <= 1}
-                        >
-                            -
-                        </button>
-                        <span className="text-xl font-bold text-gold w-8 text-center">{quantity}</span>
-                        <button
-                            type="button"
-                            onClick={() => handleQuantityChange(1)}
-                            className="w-8 h-8 flex items-center justify-center rounded bg-white/10 text-white hover:bg-white/20 transition-colors"
-                        >
-                            +
-                        </button>
-                    </div>
                 </div>
             </div>
 

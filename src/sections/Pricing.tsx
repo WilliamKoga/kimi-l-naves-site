@@ -9,35 +9,12 @@ const lotes = [
   {
     id: 1,
     name: 'LOTE 1 - EARLY ACCESS',
-    badge: 'MAIOR ECONOMIA',
-    badgeColor: 'bg-green-500/20 text-green-400 border-green-500/40',
+    badge: 'ESGOTADO',
+    badgeColor: 'bg-red-500/20 text-red-500 border-red-500/40',
     vagas: 30,
     precoBase: 50000,
     imposto: 10,
     precoFinal: 55000,
-    disponivel: true,
-    destaque: true,
-    features: [
-      'Acesso aos 2 dias do evento presencial',
-      'Módulo Preparatório Online',
-      'Certificado Internacional IMTA',
-      'Método Naves de Reprogramação Mental®',
-      'Material didático completo',
-      'Coffee break nos dois dias',
-      'Kit do participante',
-    ],
-    cta: 'GARANTIR COM DESCONTO',
-    link: '/checkout/lote-1',
-  },
-  {
-    id: 2,
-    name: 'LOTE 2 - VALOR INTEGRAL',
-    badge: 'EM BREVE',
-    badgeColor: 'bg-gray-500/20 text-gray-400 border-gray-500/40',
-    vagas: 50,
-    precoBase: null,
-    imposto: null,
-    precoFinal: null,
     disponivel: false,
     destaque: false,
     features: [
@@ -49,7 +26,30 @@ const lotes = [
       'Coffee break nos dois dias',
       'Kit do participante',
     ],
-    cta: 'INDISPONÍVEL',
+    cta: 'ESGOTADO',
+    link: '/checkout/lote-1',
+  },
+  {
+    id: 2,
+    name: 'LOTE 2 - VALOR INTEGRAL',
+    badge: 'RESTAM POUCAS VAGAS',
+    badgeColor: 'bg-gold/20 text-gold border-gold/40',
+    vagas: 20, // Adjusted to give urgency
+    precoBase: 70000,
+    imposto: 10,
+    precoFinal: 77000,
+    disponivel: true,
+    destaque: true,
+    features: [
+      'Acesso aos 2 dias do evento presencial',
+      'Módulo Preparatório Online',
+      'Certificado Internacional IMTA',
+      'Método Naves de Reprogramação Mental®',
+      'Material didático completo',
+      'Coffee break nos dois dias',
+      'Kit do participante',
+    ],
+    cta: 'GARANTIR VAGA',
     link: '/checkout/lote-2',
   },
 ];
@@ -118,8 +118,8 @@ const Pricing = () => {
 
               <div
                 className={`h-full rounded-3xl overflow-hidden ${lote.destaque
-                    ? 'border-2 border-gold shadow-gold-lg'
-                    : 'border border-gray-500/30 opacity-70'
+                  ? 'border-2 border-gold shadow-gold-lg'
+                  : 'border border-gray-500/30 opacity-70'
                   }`}
               >
                 {/* Card Header */}
@@ -175,16 +175,28 @@ const Pricing = () => {
                   ) : (
                     <div className="mt-6">
                       <div className="flex items-center gap-3 p-4 rounded-xl bg-gray-500/10 border border-gray-500/30">
-                        <Clock className="w-6 h-6 text-gray-400" />
-                        <div>
-                          <p className="text-gray-400 text-sm">Abertura do lote:</p>
-                          <p className="text-off-white font-semibold">
-                            Após venda dos 30 ingressos do Early Access
-                          </p>
-                        </div>
+                        {lote.badge === 'ESGOTADO' ? (
+                          <>
+                            <AlertCircle className="w-6 h-6 text-red-500" />
+                            <div>
+                              <p className="text-red-500 font-bold">VENDAS ENCERRADAS</p>
+                              <p className="text-gray-400 text-sm">Este lote não está mais disponível.</p>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <Clock className="w-6 h-6 text-gray-400" />
+                            <div>
+                              <p className="text-gray-400 text-sm">Abertura do lote:</p>
+                              <p className="text-off-white font-semibold">
+                                Após venda dos 30 ingressos do Early Access
+                              </p>
+                            </div>
+                          </>
+                        )}
                       </div>
                       <div className="mt-4 text-center">
-                        <span className="text-gray-500 text-lg">Preço a definir</span>
+                        {lote.badge !== 'ESGOTADO' && <span className="text-gray-500 text-lg">Preço a definir</span>}
                       </div>
                     </div>
                   )}

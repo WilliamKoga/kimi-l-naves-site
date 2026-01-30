@@ -22,30 +22,34 @@ const products = {
             'Acesso ao grupo exclusivo de alunos',
             'Bônus: Curso Online de Auto-Hipnose'
         ],
-        active: true,
-        priceId: 'price_Lote1ID' // Placeholder
+        active: false, // Lote 1 Sold Out
+        priceId: 'price_Lote1ID'
     },
     'lote-2': {
-        title: 'Formação Hipnose Clínica - 2º Lote',
-        price: 'Preço a definir',
+        title: 'Formação Hipnose Clínica - Lote 2',
+        price: '¥ 77.000',
         features: [
             'Acesso aos 2 dias de imersão presencial',
             'Coffe break incluso',
             'Certificado internacional',
             'Acesso ao grupo exclusivo de alunos'
         ],
-        active: false,
-        priceId: 'price_Lote2ID' // Placeholder
+        active: true, // Lote 2 Active
+        priceId: 'price_Lote2ID'
     }
 };
 
 const CheckoutPage = () => {
     const { productId } = useParams();
-
     const product = products[productId as keyof typeof products];
 
     const [clientSecret, setClientSecret] = useState('');
     const [quantity, setQuantity] = useState(1);
+
+    // Lifted state to persist data when clientSecret changes (re-render)
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
 
     useEffect(() => {
         if (product && product.active) {
@@ -154,22 +158,18 @@ const CheckoutPage = () => {
                     <div className="max-w-md mx-auto w-full">
                         <h2 className="text-2xl font-serif text-white mb-8">Dados de Pagamento</h2>
 
-                        {/* 
-                 IMPORTANT: 
-                 In a real application, you CANNOT initialize <Elements> without a clientSecret (or mode='payment' with amount/currency in the options, BUT fetching clientSecret from backend is the standard secure way).
-                 Since we don't have a backend to generate a clientSecret right now, this part would typically fail to render the inputs correctly or throw an error.
-                 However, for the sake of the UI demo, we will wrap it. 
-                 If it fails, we might need to mock it or show a placeholder message.
-                 Stripe Elements usually requires a valid clientSecret to load.
-             */}
-                        {/* Assuming we might not have a clientSecret, let's try to render it. If it blanks out, we know why. 
-                 Actually, newer Stripe docs say passing `mode` and `currency` + `amount` to `options` works for some client-side flows BUT usually requires a session creation on backend. 
-                 Let's put a disclaimer on the screen if it fails.
-             */}
-
                         {clientSecret && (
                             <Elements options={options} stripe={stripePromise} key={clientSecret}>
-                                <StripePaymentForm quantity={quantity} setQuantity={setQuantity} />
+                                <StripePaymentForm
+                                    quantity={quantity}
+                                    setQuantity={setQuantity}
+                                    name={name}
+                                    setName={setName}
+                                    email={email}
+                                    setEmail={setEmail}
+                                    phone={phone}
+                                    setPhone={setPhone}
+                                />
                             </Elements>
                         )}
 

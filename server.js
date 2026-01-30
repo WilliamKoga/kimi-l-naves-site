@@ -24,10 +24,13 @@ app.post('/api/create-payment-intent', async (req, res) => {
     let unitPrice = 55000;
     let description = "Formação Hipnose Clínica - Lote Early Access";
 
-    // Simple logic to handle different products if needed in future
+    // Simple logic to handle different products
     if (productId === 'price_Lote1ID') {
         unitPrice = 55000;
         description = "Formação Hipnose Clínica - Lote Early Access";
+    } else if (productId === 'price_Lote2ID') {
+        unitPrice = 77000;
+        description = "Formação Hipnose Clínica - Lote 2";
     }
 
     const amount = unitPrice * quantity;
