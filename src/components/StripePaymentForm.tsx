@@ -8,6 +8,7 @@ import { Lock } from 'lucide-react';
 interface StripePaymentFormProps {
     quantity: number;
     setQuantity: (q: number) => void;
+    unitPrice: number;
     name: string;
     setName: (s: string) => void;
     email: string;
@@ -19,6 +20,7 @@ interface StripePaymentFormProps {
 const StripePaymentForm = ({
     quantity,
     setQuantity,
+    unitPrice,
     name,
     setName,
     email,
@@ -26,6 +28,8 @@ const StripePaymentForm = ({
     phone,
     setPhone
 }: StripePaymentFormProps) => {
+    // ...
+    // ...
     const stripe = useStripe();
     const elements = useElements();
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -169,7 +173,7 @@ const StripePaymentForm = ({
                 ) : (
                     <span className="flex items-center justify-center gap-2">
                         <Lock className="w-4 h-4" />
-                        Pagar ¥ {(quantity * 55000).toLocaleString('pt-BR')} com Segurança
+                        Pagar ¥ {(quantity * unitPrice).toLocaleString('pt-BR')} com Segurança
                     </span>
                 )}
             </Button>

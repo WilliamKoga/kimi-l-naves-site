@@ -15,6 +15,7 @@ const products = {
     'lote-1': {
         title: 'Formação Hipnose Clínica - Lote Early Access',
         price: '¥ 55.000',
+        value: 55000,
         features: [
             'Acesso aos 2 dias de imersão presencial',
             'Coffe break incluso',
@@ -28,6 +29,7 @@ const products = {
     'lote-2': {
         title: 'Formação Hipnose Clínica - Lote 2',
         price: '¥ 77.000',
+        value: 77000,
         features: [
             'Acesso aos 2 dias de imersão presencial',
             'Coffe break incluso',
@@ -44,7 +46,6 @@ const CheckoutPage = () => {
     const product = products[productId as keyof typeof products];
 
     const [clientSecret, setClientSecret] = useState('');
-    const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null);
     const [quantity, setQuantity] = useState(1);
 
     // Lifted state to persist data when clientSecret changes (re-render)
@@ -54,23 +55,19 @@ const CheckoutPage = () => {
 
     useEffect(() => {
         if (product && product.active) {
-            // Create OR Update PaymentIntent as soon as the page loads or quantity changes
+            // Create PaymentIntent as soon as the page loads or quantity changes
             fetch("/api/create-payment-intent", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     productId: product.priceId,
-                    quantity: quantity,
-                    paymentIntentId: paymentIntentId // Send ID if we have it
+                    quantity: quantity
                 }),
             })
                 .then((res) => res.json())
-                .then((data) => {
-                    setClientSecret(data.clientSecret);
-                    if (data.id) setPaymentIntentId(data.id); // Save ID for future updates
-                });
+                .then((data) => setClientSecret(data.clientSecret));
         }
-    }, [productId, product, quantity]); // Re-run when quantity changes (uses current paymentIntentId state)
+    }, [productId, product, quantity]); // Re-run when quantity changes
 
     const options = {
         clientSecret,
@@ -168,6 +165,7 @@ const CheckoutPage = () => {
                                 <StripePaymentForm
                                     quantity={quantity}
                                     setQuantity={setQuantity}
+                                    unitPrice={product.value}
                                     name={name}
                                     setName={setName}
                                     email={email}
