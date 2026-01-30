@@ -17,7 +17,7 @@ app.use(express.static('dist'));
 app.use(express.json());
 
 app.post('/api/create-payment-intent', async (req, res) => {
-    const { productId, quantity = 1 } = req.body;
+    const { productId, quantity = 1, paymentIntentId } = req.body;
 
     // Securely calculate tax/total on the server
     // Lote 1: 55000 JPY
@@ -36,23 +36,41 @@ app.post('/api/create-payment-intent', async (req, res) => {
     const amount = unitPrice * quantity;
 
     try {
-        const paymentIntent = await stripe.paymentIntents.create({
-            amount: amount,
-            currency: "jpy",
-            description: `${description} (x${quantity})`,
-            metadata: {
-                productId: productId,
-                productName: description,
-                quantity: quantity.toString(),
-                integration_source: "custom_checkout"
-            },
-            automatic_payment_methods: {
-                enabled: true,
-            },
-        });
+        let paymentIntent;
+
+        if (paymentIntentId) {
+            // Update existing PaymentIntent
+            paymentIntent = await stripe.paymentIntents.update(paymentIntentId, {
+                amount: amount,
+                description: `${description} (x${quantity})`,
+                metadata: {
+                    productId: productId,
+                    productName: description,
+                    quantity: quantity.toString(),
+                    integration_source: "custom_checkout"
+                }
+            });
+        } else {
+            // Create new PaymentIntent
+            paymentIntent = await stripe.paymentIntents.create({
+                amount: amount,
+                currency: "jpy",
+                description: `${description} (x${quantity})`,
+                metadata: {
+                    productId: productId,
+                    productName: description,
+                    quantity: quantity.toString(),
+                    integration_source: "custom_checkout"
+                },
+                automatic_payment_methods: {
+                    enabled: true,
+                },
+            });
+        }
 
         res.send({
             clientSecret: paymentIntent.client_secret,
+            id: paymentIntent.id // Return ID for future updates
         });
     } catch (error) {
         console.error('Stripe error:', error);
