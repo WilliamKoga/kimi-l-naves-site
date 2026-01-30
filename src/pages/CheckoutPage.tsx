@@ -107,28 +107,36 @@ const CheckoutPage = () => {
                 '.Tab': {
                     border: '1px solid rgba(212, 175, 55, 0.2)',
                     boxShadow: 'none',
-                    backgroundColor: '#1e1e2e', // Match colorBackground
+                    backgroundColor: '#1e1e2e',
                 },
                 '.Tab:hover': {
                     border: '1px solid rgba(212, 175, 55, 0.5)',
+                    boxShadow: 'none',
                 },
                 '.Tab--selected': {
                     border: '1px solid #d4af37',
-                    boxShadow: 'none', // Removed glow
+                    boxShadow: 'none',
                     backgroundColor: '#d4af37',
                     color: '#1e1e2e',
                 },
                 '.Tab--selected:focus': {
                     boxShadow: 'none',
+                    outline: 'none',
+                    border: '1px solid #d4af37',
                 },
                 '.Input': {
                     border: '1px solid rgba(255, 255, 255, 0.1)',
-                    backgroundColor: '#272730', // Solid dark color instead of transparent white
+                    backgroundColor: '#272730',
                     boxShadow: 'none',
+                    outline: 'none',
                 },
                 '.Input:focus': {
                     border: '1px solid #d4af37',
-                    boxShadow: 'none', // Remove focus ring shadow
+                    boxShadow: 'none',
+                    outline: 'none',
+                },
+                '.Input--invalid': {
+                    boxShadow: 'none',
                 },
                 '.Label': {
                     color: '#f0f0f5',

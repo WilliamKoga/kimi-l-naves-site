@@ -171,9 +171,10 @@ const StripePaymentForm = ({
                         Processando...
                     </span>
                 ) : (
-                    <span className="flex items-center justify-center gap-2">
+                    <span className="flex items-center justify-center gap-2 text-sm sm:text-base whitespace-nowrap">
                         <Lock className="w-4 h-4" />
-                        Pagar ¥ {(quantity * unitPrice).toLocaleString('pt-BR')} com Segurança
+                        Pagar ¥ {(quantity * unitPrice).toLocaleString('pt-BR')}
+                        <span className="hidden sm:inline"> com Segurança</span>
                     </span>
                 )}
             </Button>
