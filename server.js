@@ -65,6 +65,13 @@ app.post('/api/create-payment-intent', async (req, res) => {
                 automatic_payment_methods: {
                     enabled: true,
                 },
+                payment_method_options: {
+                    card: {
+                        installments: {
+                            enabled: true
+                        }
+                    }
+                }
             });
         }
 

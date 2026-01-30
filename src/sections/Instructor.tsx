@@ -131,10 +131,10 @@ const Instructor = () => {
                     <item.icon className="w-5 h-5 text-gold" />
                   </div>
                   <div>
-                    <h4 className="text-off-white font-semibold text-sm mb-1">
+                    <h4 className="text-off-white font-semibold text-base mb-1">
                       {item.title}
                     </h4>
-                    <p className="text-gray-400 text-xs">
+                    <p className="text-gray-400 text-sm">
                       {item.description}
                     </p>
                   </div>
@@ -154,7 +154,7 @@ const Instructor = () => {
                 {livros.map((livro, index) => (
                   <span
                     key={index}
-                    className="px-3 py-1 rounded-full bg-gold/10 text-gold-light text-xs"
+                    className="px-3 py-1 rounded-full bg-gold/10 text-gold-light text-sm"
                   >
                     {livro}
                   </span>

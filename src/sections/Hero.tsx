@@ -25,13 +25,13 @@ const Hero = () => {
 
       {/* Mobile Background - Gradient only */}
       <div className="lg:hidden absolute inset-0 bg-gradient-to-br from-indigo-deep via-indigo-medium to-blue-night" />
-      
+
       {/* Decorative Circles - Only on mobile */}
       <div className="lg:hidden absolute top-20 left-10 w-72 h-72 bg-gold/5 rounded-full blur-3xl animate-float" />
       <div className="lg:hidden absolute bottom-20 right-10 w-96 h-96 bg-gold/5 rounded-full blur-3xl animate-float" style={{ animationDelay: '3s' }} />
-      
+
       {/* Grid Pattern - Only on mobile */}
-      <div 
+      <div
         className="lg:hidden absolute inset-0 opacity-[0.03]"
         style={{
           backgroundImage: `linear-gradient(rgba(212, 175, 55, 0.5) 1px, transparent 1px),
@@ -42,7 +42,7 @@ const Hero = () => {
 
       {/* Content */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="text-left">
+        <div className="text-center lg:text-left">
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -83,7 +83,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex flex-wrap justify-start gap-4 sm:gap-6 mb-10"
+            className="flex flex-wrap justify-center lg:justify-start gap-4 sm:gap-6 mb-10"
           >
             <div className="flex items-center gap-2 text-off-white/80">
               <Calendar className="w-5 h-5 text-gold" />
@@ -119,7 +119,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.5 }}
-            className="flex flex-col sm:flex-row gap-4 justify-start items-start sm:items-center"
+            className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center"
           >
             <Button
               onClick={() => scrollToSection('ingressos')}

@@ -93,7 +93,47 @@ const CheckoutPage = () => {
             theme: 'night' as const,
             variables: {
                 colorPrimary: '#d4af37',
+                colorBackground: '#1e1e2e',
+                colorText: '#f0f0f5',
+                colorDanger: '#df1b41',
+                fontFamily: 'ui-sans-serif, system-ui, sans-serif',
+                spacingUnit: '4px',
+                borderRadius: '8px',
+                // Custom overrides to fix "white shadow" and weird borders
+                actionPrimaryText: '#1e1e2e', // Text color on the gold pay button
+                tabIconSelectedColor: '#1e1e2e',
             },
+            rules: {
+                '.Tab': {
+                    border: '1px solid rgba(212, 175, 55, 0.2)',
+                    boxShadow: 'none',
+                    backgroundColor: '#1e1e2e', // Match colorBackground
+                },
+                '.Tab:hover': {
+                    border: '1px solid rgba(212, 175, 55, 0.5)',
+                },
+                '.Tab--selected': {
+                    border: '1px solid #d4af37',
+                    boxShadow: 'none', // Removed glow
+                    backgroundColor: '#d4af37',
+                    color: '#1e1e2e',
+                },
+                '.Tab--selected:focus': {
+                    boxShadow: 'none',
+                },
+                '.Input': {
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    backgroundColor: '#272730', // Solid dark color instead of transparent white
+                    boxShadow: 'none',
+                },
+                '.Input:focus': {
+                    border: '1px solid #d4af37',
+                    boxShadow: 'none', // Remove focus ring shadow
+                },
+                '.Label': {
+                    color: '#f0f0f5',
+                }
+            }
         },
     };
 

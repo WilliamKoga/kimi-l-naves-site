@@ -32,8 +32,8 @@ const lotes = [
   {
     id: 2,
     name: 'LOTE 2 - VALOR INTEGRAL',
-    badge: 'EM BREVE',
-    badgeColor: 'bg-gray-500/20 text-gray-400 border-gray-500/40',
+    badge: 'VAGAS LIMITADAS',
+    badgeColor: 'bg-gold/20 text-gold border-gold/40',
     vagas: 0,
     precoBase: 70000,
     imposto: 10,
@@ -196,7 +196,7 @@ const Pricing = () => {
                         )}
                       </div>
                       <div className="mt-4 text-center">
-                        {lote.badge !== 'ESGOTADO' && <span className="text-gray-500 text-lg">Preço a definir</span>}
+                        {/* Removed 'Preço a definir' as requested */}
                       </div>
                     </div>
                   )}
