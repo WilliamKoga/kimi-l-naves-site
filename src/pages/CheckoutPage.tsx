@@ -89,12 +89,12 @@ const CheckoutPage = () => {
 
     const options = {
         clientSecret,
-        appearance: {
-            theme: 'night' as const,
-            variables: {
-                colorPrimary: '#d4af37',
-            },
-        },
+        // appearance: {
+        //     theme: 'night' as const,
+        //     variables: {
+        //         colorPrimary: '#d4af37',
+        //     },
+        // },
     };
 
     if (!product) {

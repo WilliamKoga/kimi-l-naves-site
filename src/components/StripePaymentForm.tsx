@@ -147,14 +147,9 @@ const StripePaymentForm = ({
                 </div>
             </div>
 
-            <div className="pt-4 border-t border-white/10">
-                <PaymentElement options={{
-                    layout: 'tabs',
-                    wallets: {
-                        applePay: 'auto',
-                        googlePay: 'auto'
-                    }
-                }} />
+            <div className="pt-4 border-t border-white/10 min-h-[100px] rounded-lg">
+                {/* Temporary bg-white to debug visibility if theme is broken */}
+                <PaymentElement id="payment-element" />
             </div>
 
             {errorMessage && (
