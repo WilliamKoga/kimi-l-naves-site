@@ -46,6 +46,7 @@ const CheckoutPage = () => {
     const product = products[productId as keyof typeof products];
 
     const [clientSecret, setClientSecret] = useState('');
+    const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null);
     const [quantity, setQuantity] = useState(1);
 
     // Lifted state to persist data when clientSecret changes (re-render)
@@ -55,19 +56,23 @@ const CheckoutPage = () => {
 
     useEffect(() => {
         if (product && product.active) {
-            // Create PaymentIntent as soon as the page loads or quantity changes
+            // Create OR Update PaymentIntent as soon as the page loads or quantity changes
             fetch("/api/create-payment-intent", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     productId: product.priceId,
-                    quantity: quantity
+                    quantity: quantity,
+                    paymentIntentId: paymentIntentId // Send ID if we have it
                 }),
             })
                 .then((res) => res.json())
-                .then((data) => setClientSecret(data.clientSecret));
+                .then((data) => {
+                    setClientSecret(data.clientSecret);
+                    if (data.id) setPaymentIntentId(data.id); // Save ID for future updates
+                });
         }
-    }, [productId, product, quantity]); // Re-run when quantity changes
+    }, [productId, product, quantity]); // Re-run when quantity changes (uses current paymentIntentId state)
 
     const options = {
         clientSecret,
