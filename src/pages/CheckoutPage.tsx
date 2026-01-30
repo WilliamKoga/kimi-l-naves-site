@@ -10,44 +10,44 @@ import { Button } from '@/components/ui/button';
 // Load Stripe with Publishable Key from env
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
+// Define products outside component to prevent re-renders triggering useEffect
+const products = {
+    'lote-1': {
+        title: 'Formação Hipnose Clínica - Lote Early Access',
+        price: '¥ 55.000',
+        features: [
+            'Acesso aos 2 dias de imersão presencial',
+            'Coffe break incluso',
+            'Certificado internacional',
+            'Acesso ao grupo exclusivo de alunos',
+            'Bônus: Curso Online de Auto-Hipnose'
+        ],
+        active: true,
+        priceId: 'price_Lote1ID' // Placeholder
+    },
+    'lote-2': {
+        title: 'Formação Hipnose Clínica - 2º Lote',
+        price: 'Preço a definir',
+        features: [
+            'Acesso aos 2 dias de imersão presencial',
+            'Coffe break incluso',
+            'Certificado internacional',
+            'Acesso ao grupo exclusivo de alunos'
+        ],
+        active: false,
+        priceId: 'price_Lote2ID' // Placeholder
+    }
+};
+
 const CheckoutPage = () => {
     const { productId } = useParams();
-
-    // Define products
-    const products = {
-        'lote-1': {
-            title: 'Formação Hipnose Clínica - Lote Early Access',
-            price: '¥ 55.000',
-            features: [
-                'Acesso aos 2 dias de imersão presencial',
-                'Coffe break incluso',
-                'Certificado internacional',
-                'Acesso ao grupo exclusivo de alunos',
-                'Bônus: Curso Online de Auto-Hipnose'
-            ],
-            active: true,
-            priceId: 'price_Lote1ID' // Placeholder
-        },
-        'lote-2': {
-            title: 'Formação Hipnose Clínica - 2º Lote',
-            price: 'Preço a definir',
-            features: [
-                'Acesso aos 2 dias de imersão presencial',
-                'Coffe break incluso',
-                'Certificado internacional',
-                'Acesso ao grupo exclusivo de alunos'
-            ],
-            active: false,
-            priceId: 'price_Lote2ID' // Placeholder
-        }
-    };
 
     const product = products[productId as keyof typeof products];
 
     const [clientSecret, setClientSecret] = useState('');
 
     useEffect(() => {
-        if (product && product.active) {
+        if (product && product.active && !clientSecret) {
             // Create PaymentIntent as soon as the page loads
             fetch("/api/create-payment-intent", {
                 method: "POST",
@@ -57,7 +57,7 @@ const CheckoutPage = () => {
                 .then((res) => res.json())
                 .then((data) => setClientSecret(data.clientSecret));
         }
-    }, [productId, product]);
+    }, [productId, product, clientSecret]);
 
     const options = {
         clientSecret,
