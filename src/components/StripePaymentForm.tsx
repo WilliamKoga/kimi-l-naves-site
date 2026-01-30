@@ -1,6 +1,8 @@
 import { PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Lock } from 'lucide-react';
 
 const StripePaymentForm = () => {
@@ -9,6 +11,10 @@ const StripePaymentForm = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [isProcessing, setIsProcessing] = useState(false);
 
+    // Form state for required fields
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
@@ -16,13 +22,26 @@ const StripePaymentForm = () => {
             return;
         }
 
+        if (!email || !phone) {
+            setErrorMessage('Por favor, preencha todos os campos obrigatórios.');
+            return;
+        }
+
         setIsProcessing(true);
+        setErrorMessage(null); // Clear previous errors
 
         const { error } = await stripe.confirmPayment({
             elements,
             confirmParams: {
                 // Make sure to change this to your payment completion page
                 return_url: `${window.location.origin}/completion`,
+                receipt_email: email,
+                payment_method_data: {
+                    billing_details: {
+                        email: email,
+                        phone: phone,
+                    },
+                },
             },
         });
 
@@ -33,9 +52,53 @@ const StripePaymentForm = () => {
         setIsProcessing(false);
     };
 
+    const paymentElementOptions = {
+        layout: "tabs",
+        // Hiding the 'link' authentication element if possible via layout or passing options
+        // 'wallets' option implies applePay/googlePay, 'link' behavior is often automatic.
+        // To strictly remove 'Link' button, we often need to handle it in backend or here.
+        // We will try to rely on 'tabs' layout which sometimes simplifies it.
+        // Note: Disabling Link completely usually requires backend 'automatic_payment_methods' config.
+    };
+
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
-            <PaymentElement />
+            <div className="space-y-4">
+                <div className="space-y-2">
+                    <Label htmlFor="email" className="text-off-white">Email (Obrigatório)</Label>
+                    <Input
+                        id="email"
+                        type="email"
+                        placeholder="seu@email.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        className="bg-white/10 border-white/20 text-off-white placeholder:text-white/30"
+                    />
+                </div>
+
+                <div className="space-y-2">
+                    <Label htmlFor="phone" className="text-off-white">Telefone / WhatsApp (Obrigatório)</Label>
+                    <Input
+                        id="phone"
+                        type="tel"
+                        placeholder="(11) 99999-9999"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        required
+                        className="bg-white/10 border-white/20 text-off-white placeholder:text-white/30"
+                    />
+                </div>
+            </div>
+
+            <PaymentElement options={{
+                layout: 'tabs',
+                // This attempts to hide the Link authentication element
+                wallets: {
+                    applePay: 'auto',
+                    googlePay: 'auto'
+                }
+            }} />
 
             {errorMessage && (
                 <div className="text-red-500 text-sm mt-2">{errorMessage}</div>
