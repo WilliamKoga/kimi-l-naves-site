@@ -54,8 +54,11 @@ const CheckoutPage = () => {
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
 
+    const [error, setError] = useState('');
+
     useEffect(() => {
         if (product && product.active) {
+            setError(''); // Reset error
             // Create OR Update PaymentIntent as soon as the page loads or quantity changes
             fetch("/api/create-payment-intent", {
                 method: "POST",
@@ -66,10 +69,20 @@ const CheckoutPage = () => {
                     paymentIntentId: paymentIntentId // Send ID if we have it
                 }),
             })
-                .then((res) => res.json())
+                .then(async (res) => {
+                    if (!res.ok) {
+                        const text = await res.text();
+                        throw new Error(`Erro do Servidor (${res.status}): ${text}`);
+                    }
+                    return res.json();
+                })
                 .then((data) => {
                     setClientSecret(data.clientSecret);
-                    if (data.id) setPaymentIntentId(data.id); // Save ID for future updates
+                    if (data.id) setPaymentIntentId(data.id);
+                })
+                .catch((err) => {
+                    console.error("Erro no checkout:", err);
+                    setError("Não foi possível iniciar o pagamento. Verifique se o servidor está rodando e as chaves do Stripe estão configuradas.");
                 });
         }
     }, [productId, product, quantity]); // Re-run when quantity changes (uses current paymentIntentId state)
@@ -164,6 +177,12 @@ const CheckoutPage = () => {
                 ) : (
                     <div className="max-w-md mx-auto w-full">
                         <h2 className="text-2xl font-serif text-white mb-8">Dados de Pagamento</h2>
+
+                        {error && (
+                            <div className="p-4 mb-6 text-sm text-red-500 bg-red-500/10 border border-red-500/20 rounded-lg">
+                                {error}
+                            </div>
+                        )}
 
                         {clientSecret && (
                             <Elements options={options} stripe={stripePromise} key={clientSecret}>
