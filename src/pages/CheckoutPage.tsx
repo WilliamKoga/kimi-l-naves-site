@@ -3,11 +3,12 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import { ArrowLeft, Check, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import StripePaymentForm from '@/components/StripePaymentForm';
 import { Button } from '@/components/ui/button';
 
-// Replace with your actual Publishable Key from Stripe Dashboard
-const stripePromise = loadStripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
+// Load Stripe with Publishable Key from env
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const CheckoutPage = () => {
     const { productId } = useParams();
@@ -43,13 +44,29 @@ const CheckoutPage = () => {
 
     const product = products[productId as keyof typeof products];
 
-    // Placeholder options for Stripe Elements
-    // In a real app, you would fetch the clientSecret from your backend here
+    const [clientSecret, setClientSecret] = useState('');
+
+    useEffect(() => {
+        if (product && product.active) {
+            // Create PaymentIntent as soon as the page loads
+            fetch("/api/create-payment-intent", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ productId: product.priceId }),
+            })
+                .then((res) => res.json())
+                .then((data) => setClientSecret(data.clientSecret));
+        }
+    }, [productId, product]);
+
     const options = {
-        mode: 'payment',
-        currency: 'jpy',
-        amount: 55000,
-        // appearance: { theme: 'night' }, // Customize Stripe theme to match site
+        clientSecret,
+        appearance: {
+            theme: 'night' as const,
+            variables: {
+                colorPrimary: '#d4af37',
+            },
+        },
     };
 
     if (!product) {
@@ -146,9 +163,11 @@ const CheckoutPage = () => {
                  Let's put a disclaimer on the screen if it fails.
              */}
 
-                        <Elements stripe={stripePromise} options={options as any}>
-                            <StripePaymentForm />
-                        </Elements>
+                        {clientSecret && (
+                            <Elements options={options} stripe={stripePromise}>
+                                <StripePaymentForm />
+                            </Elements>
+                        )}
 
                         <div className="mt-8 pt-8 border-t border-white/10 text-center">
                             <p className="text-white/40 text-xs">
