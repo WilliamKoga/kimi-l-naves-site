@@ -52,14 +52,6 @@ const StripePaymentForm = () => {
         setIsProcessing(false);
     };
 
-    const paymentElementOptions = {
-        layout: "tabs",
-        // Hiding the 'link' authentication element if possible via layout or passing options
-        // 'wallets' option implies applePay/googlePay, 'link' behavior is often automatic.
-        // To strictly remove 'Link' button, we often need to handle it in backend or here.
-        // We will try to rely on 'tabs' layout which sometimes simplifies it.
-        // Note: Disabling Link completely usually requires backend 'automatic_payment_methods' config.
-    };
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
