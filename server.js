@@ -42,7 +42,9 @@ app.post('/api/create-payment-intent', async (req, res) => {
 });
 
 // Handle SPA routing - return index.html for all other routes
-app.get('*', (req, res) => {
+// Handle SPA routing - return index.html for all other routes
+// Express 5 requires proper wildcard handling, using regex /.*/ to match everything
+app.get(/.*/, (req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
