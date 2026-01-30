@@ -17,27 +17,30 @@ app.use(express.static('dist'));
 app.use(express.json());
 
 app.post('/api/create-payment-intent', async (req, res) => {
-    const { productId } = req.body;
+    const { productId, quantity = 1 } = req.body;
 
     // Securely calculate tax/total on the server
     // Lote 1: 55000 JPY
-    let amount = 55000;
+    let unitPrice = 55000;
     let description = "Formação Hipnose Clínica - Lote Early Access";
 
     // Simple logic to handle different products if needed in future
     if (productId === 'price_Lote1ID') {
-        amount = 55000;
+        unitPrice = 55000;
         description = "Formação Hipnose Clínica - Lote Early Access";
     }
+
+    const amount = unitPrice * quantity;
 
     try {
         const paymentIntent = await stripe.paymentIntents.create({
             amount: amount,
             currency: "jpy",
-            description: description,
+            description: `${description} (x${quantity})`,
             metadata: {
                 productId: productId,
                 productName: description,
+                quantity: quantity.toString(),
                 integration_source: "custom_checkout"
             },
             automatic_payment_methods: {

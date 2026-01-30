@@ -45,19 +45,23 @@ const CheckoutPage = () => {
     const product = products[productId as keyof typeof products];
 
     const [clientSecret, setClientSecret] = useState('');
+    const [quantity, setQuantity] = useState(1);
 
     useEffect(() => {
-        if (product && product.active && !clientSecret) {
-            // Create PaymentIntent as soon as the page loads
+        if (product && product.active) {
+            // Create PaymentIntent as soon as the page loads or quantity changes
             fetch("/api/create-payment-intent", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ productId: product.priceId }),
+                body: JSON.stringify({
+                    productId: product.priceId,
+                    quantity: quantity
+                }),
             })
                 .then((res) => res.json())
                 .then((data) => setClientSecret(data.clientSecret));
         }
-    }, [productId, product, clientSecret]);
+    }, [productId, product, quantity]); // Re-run when quantity changes
 
     const options = {
         clientSecret,
@@ -164,8 +168,8 @@ const CheckoutPage = () => {
              */}
 
                         {clientSecret && (
-                            <Elements options={options} stripe={stripePromise}>
-                                <StripePaymentForm />
+                            <Elements options={options} stripe={stripePromise} key={clientSecret}>
+                                <StripePaymentForm quantity={quantity} setQuantity={setQuantity} />
                             </Elements>
                         )}
 

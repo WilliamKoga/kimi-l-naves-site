@@ -5,13 +5,19 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Lock } from 'lucide-react';
 
-const StripePaymentForm = () => {
+interface StripePaymentFormProps {
+    quantity: number;
+    setQuantity: (q: number) => void;
+}
+
+const StripePaymentForm = ({ quantity, setQuantity }: StripePaymentFormProps) => {
     const stripe = useStripe();
     const elements = useElements();
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [isProcessing, setIsProcessing] = useState(false);
 
     // Form state for required fields
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
 
@@ -22,7 +28,7 @@ const StripePaymentForm = () => {
             return;
         }
 
-        if (!email || !phone) {
+        if (!name || !email || !phone) {
             setErrorMessage('Por favor, preencha todos os campos obrigatórios.');
             return;
         }
@@ -38,6 +44,7 @@ const StripePaymentForm = () => {
                 receipt_email: email,
                 payment_method_data: {
                     billing_details: {
+                        name: name,
                         email: email,
                         phone: phone,
                     },
@@ -52,10 +59,28 @@ const StripePaymentForm = () => {
         setIsProcessing(false);
     };
 
+    const handleQuantityChange = (delta: number) => {
+        const newQuantity = Math.max(1, quantity + delta);
+        setQuantity(newQuantity);
+    };
+
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="bg-white/5 backdrop-blur-md border border-white/10 p-6 rounded-2xl shadow-xl space-y-6">
             <div className="space-y-4">
+                <div className="space-y-2">
+                    <Label htmlFor="name" className="text-off-white">Nome Completo (Obrigatório)</Label>
+                    <Input
+                        id="name"
+                        type="text"
+                        placeholder="Seu nome completo"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        required
+                        className="bg-white/10 border-white/20 text-off-white placeholder:text-white/30"
+                    />
+                </div>
+
                 <div className="space-y-2">
                     <Label htmlFor="email" className="text-off-white">Email (Obrigatório)</Label>
                     <Input
@@ -81,16 +106,39 @@ const StripePaymentForm = () => {
                         className="bg-white/10 border-white/20 text-off-white placeholder:text-white/30"
                     />
                 </div>
+
+                <div className="space-y-2">
+                    <Label className="text-off-white">Quantidade de Ingressos</Label>
+                    <div className="flex items-center gap-4 bg-white/10 border border-white/20 rounded-md p-2 w-fit">
+                        <button
+                            type="button"
+                            onClick={() => handleQuantityChange(-1)}
+                            className="w-8 h-8 flex items-center justify-center rounded bg-white/10 text-white hover:bg-white/20 transition-colors"
+                            disabled={quantity <= 1}
+                        >
+                            -
+                        </button>
+                        <span className="text-xl font-bold text-gold w-8 text-center">{quantity}</span>
+                        <button
+                            type="button"
+                            onClick={() => handleQuantityChange(1)}
+                            className="w-8 h-8 flex items-center justify-center rounded bg-white/10 text-white hover:bg-white/20 transition-colors"
+                        >
+                            +
+                        </button>
+                    </div>
+                </div>
             </div>
 
-            <PaymentElement options={{
-                layout: 'tabs',
-                // This attempts to hide the Link authentication element
-                wallets: {
-                    applePay: 'auto',
-                    googlePay: 'auto'
-                }
-            }} />
+            <div className="pt-4 border-t border-white/10">
+                <PaymentElement options={{
+                    layout: 'tabs',
+                    wallets: {
+                        applePay: 'auto',
+                        googlePay: 'auto'
+                    }
+                }} />
+            </div>
 
             {errorMessage && (
                 <div className="text-red-500 text-sm mt-2">{errorMessage}</div>
@@ -108,7 +156,7 @@ const StripePaymentForm = () => {
                 ) : (
                     <span className="flex items-center justify-center gap-2">
                         <Lock className="w-4 h-4" />
-                        Pagar com Segurança
+                        Pagar ¥ {(quantity * 55000).toLocaleString('pt-BR')} com Segurança
                     </span>
                 )}
             </Button>
