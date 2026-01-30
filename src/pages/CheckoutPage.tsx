@@ -16,7 +16,7 @@ const CheckoutPage = () => {
     const products = {
         'lote-1': {
             title: 'Formação Hipnose Clínica - Lote Early Access',
-            price: '¥ 100.000',
+            price: '¥ 55.000',
             features: [
                 'Acesso aos 2 dias de imersão presencial',
                 'Coffe break incluso',
@@ -29,7 +29,7 @@ const CheckoutPage = () => {
         },
         'lote-2': {
             title: 'Formação Hipnose Clínica - 2º Lote',
-            price: '¥ 120.000',
+            price: 'Preço a definir',
             features: [
                 'Acesso aos 2 dias de imersão presencial',
                 'Coffe break incluso',
@@ -48,7 +48,7 @@ const CheckoutPage = () => {
     const options = {
         mode: 'payment',
         currency: 'jpy',
-        amount: 100000,
+        amount: 55000,
         // appearance: { theme: 'night' }, // Customize Stripe theme to match site
     };
 
